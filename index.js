@@ -1,17 +1,22 @@
 /*
-*Primary file for the API
-*
-*
+* Primary file for the API
 */
 
 //Dependencies
-
 const http = require('http');
 const https = require('https')
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
 var config = require('./config');
 var fs = require('fs');
+var _data = require('./lib/data')
+
+//Testing
+// @TO DO: Delete this
+_data.delete('test', 'newFile', (err) => {
+    console.log('Error:', err)
+})
+
 
 // Instantiate the HTTP server
 var httpServer = http.createServer((req, res) => {
@@ -22,6 +27,7 @@ var httpServer = http.createServer((req, res) => {
 httpServer.listen(config.httpPort, () => {
     console.log(`The Server is listening on port ${config.httpPort}`);
 })
+
 var httpsServerOptions = {
     key: fs.readFileSync('./https/key.pem'),
     cert: fs.readFileSync('./https/cert.pem')
