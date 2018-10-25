@@ -7,15 +7,11 @@ const http = require('http');
 const https = require('https')
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
-var config = require('./config');
+var config = require('./lib/config');
 var fs = require('fs');
-var _data = require('./lib/data')
-
-//Testing
-// @TO DO: Delete this
-_data.delete('test', 'newFile', (err) => {
-    console.log('Error:', err)
-})
+var _data = require('./lib/data');
+var handlers = require('./lib/handlers');
+var helpers = require('./lib/helpers');
 
 
 // Instantiate the HTTP server
@@ -81,7 +77,7 @@ var unifiedServer = (req, res) => {
              queryStringObject,
              method,
              headers,
-             payload: buffer
+             payload: helpers.parseJsonToObject(buffer) 
          };
  
          //Route the handler to the handler specified in router
@@ -107,30 +103,11 @@ var unifiedServer = (req, res) => {
      });
 }
 
-// Define the handlers 
-var handlers = {}
-
-//Sample handler 
-handlers.ping = (data, callback) => {
-
-    // callback http code and payload
-    callback(200);
-}
-
-handlers.hello = (data, callback) => {
-    callback(200, {massage: 'Greetings master'})
-}
-
-//Not found handler
-handlers.notFound = (data, callback) => {
-
-    // not found handler 
-    callback(404, {});
-}
 
 // Define the router
 var router = {
     ping: handlers.ping,
     notFound: handlers.notFound,
-    hello: handlers.hello
+    hello: handlers.hello,
+    users: handlers.users
 }
